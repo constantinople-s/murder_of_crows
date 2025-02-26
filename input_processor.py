@@ -3,13 +3,14 @@ class InputProcessor:
         self.bp = block_processor
 
     def get_input(self):
-        self.get_blocks()
-        self.get_votes()
+        while True:
+            self.get_blocks()
+            self.get_votes()
     
     def get_blocks(self):
         while True:
             text = input("To add a block, enter its id and view, \
-separated by a comma, or hit enter to skip:\n")
+separated by a comma, or hit enter to enter votes:\n")
             if text == '':
                 break
             block = text.split(',')
@@ -34,7 +35,7 @@ separated by a comma, or hit enter to skip:\n")
 
     def get_votes(self):
         while True:
-            text = input("To add a vote, enter the block id, or hit enter to skip:\n")
+            text = input("To add a vote, enter the block id, or hit enter to add blocks:\n")
             if text == '':
                 break
             self.process_votes(text)

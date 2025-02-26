@@ -12,28 +12,31 @@ class TestBlockProcessor(unittest.TestCase):
         self.assertEqual(self.bp.blocks['a1b2c3'], 0)
 
     def test_add_vote(self):
-        vote = {'block_id': 'a1b2c3'}
+        vote = {'block_id': 'aaaa'}
         self.bp.add_vote(vote)
-        self.assertIn('a1b2c3', self.bp.votes)
+        self.assertNotIn('a1b2c3', self.bp.votes)
+        self.assertIn('aaaa', self.bp.votes)
 
     def test_construct_chain(self):
         blocks = [
             {'id': 'a1b2c3', 'view': 0},
             {'id': 'd4e5f6', 'view': 1},
             {'id': 'g7h8i9', 'view': 2},
-            {'id': 'j0k1l2', 'view': 1}
+            {'id': 'j0k1l2', 'view': 1},
+            {'id': 'm3n4o5', 'view': 3}
         ]
-        votes = [{'block_id': 'a1b2c3'}, {'block_id': 'd4e5f6'}, {'block_id': 'g7h8i9'}]
+        votes = [{'block_id': 'a1b2c3'}, {'block_id': 'd4e5f6'}, {'block_id': 'g7h8i9'}, {'block_id': "12323"}]
 
         for block in blocks:
             self.bp.add_block(block)
         
         for vote in votes:
             self.bp.add_vote(vote)
-        
-        chain = self.bp.construct_chain()
-        
-        self.assertEqual(chain, ['a1b2c3', 'd4e5f6', 'g7h8i9'])
+
+        self.assertEqual(self.bp.chain, ['a1b2c3', 'd4e5f6', 'g7h8i9'])
+        self.assertEqual(self.bp.blocks, {"m3n4o5": 3})
+        self.assertEqual(self.bp.views, {3: ["m3n4o5"]})
+        self.assertEqual(self.bp.votes, ["12323"])
 
 class TestInputProcessor(unittest.TestCase):
     def setUp(self):
