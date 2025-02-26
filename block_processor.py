@@ -29,11 +29,14 @@ class BlockProcessor:
         del self.views[view]
 
     def construct_chain(self):
-        wanted_view = len(self.chain)
-        for block_id in self.views[wanted_view]:
-            if block_id in self.votes:
-                self.chain.append(block_id)
-                self.remove_view(wanted_view)
-                self.votes.remove(block_id)
-                print("Added a block to the chain \n", self.chain)
-                return self.chain
+        while True:
+            wanted_view = len(self.chain)
+            for block_id in self.views[wanted_view]:
+                if block_id in self.votes:
+                    self.chain.append(block_id)
+                    self.remove_view(wanted_view)
+                    self.votes.remove(block_id)
+                    print("Added a block to the chain \n", self.chain)
+                    break
+            else:
+                break
