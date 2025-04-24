@@ -14,7 +14,7 @@ class BlockProcessor:
            block['view'] < len(self.chain):
             return False
         self.blocks[block['id']] = block['view']
-        self.views[block['view']].append(block['id'])
+        self.views[block['view']].append(block)
         self.construct_chain()
 
     def add_vote(self, vote):
@@ -24,16 +24,18 @@ class BlockProcessor:
         self.construct_chain()
 
     def remove_view(self, view):
-        for block_id in self.views[view]:
+        for block in self.views[view]:
+            block_id = block['id']
             del self.blocks[block_id]
         del self.views[view]
 
     def construct_chain(self):
         while True:
             wanted_view = len(self.chain)
-            for block_id in self.views[wanted_view]:
+            for block in self.views[wanted_view]:
+                block_id = block['id']
                 if block_id in self.votes:
-                    self.chain.append(block_id)
+                    self.chain.append(block)
                     self.remove_view(wanted_view)
                     self.votes.remove(block_id)
                     print("Added a block to the chain \n", self.chain)
