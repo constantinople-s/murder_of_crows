@@ -1,5 +1,12 @@
 from collections import defaultdict
+from dataclasses import dataclass
 
+
+@dataclass
+class Block:
+    id: str
+    view: int
+    value: float
 
 class BlockProcessor:
     def __init__(self):
@@ -8,36 +15,35 @@ class BlockProcessor:
         self.votes = []
         self.chain = []
 
-    def add_block(self, block):
-        if block['id'] in self.blocks or \
-           block['id'] in self.chain or \
-           block['view'] < len(self.chain):
+    def add_block(self, id, view, value):
+        block = Block(id, view, value)
+        if block.id in self.blocks or \
+           block.id in self.chain or \
+           block.view < len(self.chain):
             return False
-        self.blocks[block['id']] = block['view']
-        self.views[block['view']].append(block)
+        self.blocks[block.id] = block.view
+        self.views[block.view].append(block)
         self.construct_chain()
 
     def add_vote(self, vote):
-        if vote['block_id'] in self.chain or vote['block_id'] in self.votes:
+        if vote in self.chain or vote in self.votes:
             return False
-        self.votes.append(vote['block_id'])
+        self.votes.append(vote)
         self.construct_chain()
 
     def remove_view(self, view):
         for block in self.views[view]:
-            block_id = block['id']
-            del self.blocks[block_id]
+            del self.blocks[block.id]
         del self.views[view]
 
     def construct_chain(self):
         while True:
             wanted_view = len(self.chain)
             for block in self.views[wanted_view]:
-                block_id = block['id']
-                if block_id in self.votes:
+                if block.id in self.votes:
                     self.chain.append(block)
                     self.remove_view(wanted_view)
-                    self.votes.remove(block_id)
+                    self.votes.remove(block.id)
                     print("Added a block to the chain \n", self.chain)
                     break
             else:

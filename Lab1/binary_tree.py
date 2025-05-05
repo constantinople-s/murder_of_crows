@@ -1,6 +1,6 @@
 class Node:
-    def __init__(self, value=None):
-        self.value = value
+    def __init__(self, block=None):
+        self.block = block
         self.left = None
         self.right = None
 
@@ -11,9 +11,9 @@ class Node:
             self.add(block)
 
     def add(self, block):
-        if self.value is None:
-            self.value = block
-        elif block['value'] <= self.value['value']:
+        if self.block is None:
+            self.block = block
+        elif block.value <= self.block.value:
             if self.left is None:
                 self.left = Node(block)
             else:
@@ -33,8 +33,7 @@ class Node:
         return False
 
     def is_complete(self):
-        """Check if the tree is complete using BFS"""
-        if self.value is None:  # Empty tree
+        if self.block is None:
             return True
 
         queue = [self]
@@ -43,7 +42,6 @@ class Node:
         while queue:
             current = queue.pop(0)
 
-            # Check left child
             if current.left:
                 if non_full_node_seen:
                     return False
@@ -51,7 +49,6 @@ class Node:
             else:
                 non_full_node_seen = True
 
-            # Check right child
             if current.right:
                 if non_full_node_seen:
                     return False
@@ -62,7 +59,6 @@ class Node:
         return True
 
     def is_perfect(self, depth=0, level=None):
-        """Check if the tree is perfect"""
         if level is None:
             level = self.max_depth()
         if not self.left and not self.right:
@@ -72,19 +68,17 @@ class Node:
         return self.left.is_perfect(depth+1, level) and self.right.is_perfect(depth+1, level)
 
     def count_nodes(self):
-        """Count nodes in the tree"""
         left_count = self.left.count_nodes() if self.left else 0
         right_count = self.right.count_nodes() if self.right else 0
         return 1 + left_count + right_count
     
     def max_depth(self):
-        """Calculate maximum depth of the tree"""
         left_depth = self.left.max_depth() if self.left else 0
         right_depth = self.right.max_depth() if self.right else 0
         return 1 + max(left_depth, right_depth)
 
     def pre_order_traversal(self):
-        print(self.value, end=" ")
+        print(self.block, end=" ")
         if self.left:
             self.left.pre_order_traversal()
         if self.right:
@@ -93,7 +87,7 @@ class Node:
     def in_order_traversal(self):
         if self.left:
             self.left.in_order_traversal()
-        print(self.value, end=" ")
+        print(self.block, end=" ")
         if self.right:
             self.right.in_order_traversal()
 
@@ -102,7 +96,7 @@ class Node:
             self.left.post_order_traversal()
         if self.right:
             self.right.post_order_traversal()
-        print(self.value, end=" ")
+        print(self.block, end=" ")
 
     def print_tree_type(self):
         is_full = self.is_full()
