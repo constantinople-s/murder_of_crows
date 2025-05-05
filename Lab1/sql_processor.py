@@ -65,6 +65,7 @@ class SqlProcessor:
                 conn.commit()
             except sqlite3.IntegrityError as e:
                 print(e)
+                
     def get_votes(self, person_id):
         with sqlite3.connect(self.db_name) as conn:
             cursor = conn.cursor()
@@ -86,7 +87,6 @@ class SqlProcessor:
                 conn.commit()
             except sqlite3.IntegrityError as e:
                 print(f"Reference to non-existent vote ID {vote_id}: {e}")
-            conn.commit()
 
     def add_person(self, person_id, name, birth_year, ip_addr):
         with sqlite3.connect(self.db_name) as conn:
